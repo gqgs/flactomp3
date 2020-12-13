@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"io"
 	"log"
 	"os"
@@ -11,6 +12,10 @@ import (
 )
 
 func process(o options) error {
+	if o.input == "" {
+		return errors.New("input must be defined")
+	}
+
 	baseFolder := filepath.Base(o.input)
 	log.Printf("Processing: %q", baseFolder)
 
