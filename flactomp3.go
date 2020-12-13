@@ -17,7 +17,6 @@ func process(o options) error {
 	}
 
 	baseFolder := filepath.Base(o.input)
-	log.Printf("Processing: %q", baseFolder)
 
 	outFolder := filepath.Join(o.output, baseFolder+" [V0]")
 	if err := os.Mkdir(outFolder, os.ModePerm); err != nil {
