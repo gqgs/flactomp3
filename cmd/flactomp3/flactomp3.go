@@ -5,16 +5,20 @@ import (
 	"io"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/gqgs/flactomp3/pkg/convert"
 )
 
 func process(o options) error {
 	if o.input == "" {
 		return errors.New("input must be defined")
 	}
+
+	var converter convert.Converter
+	converter = convert.NewFFmpegConverter()
 
 	baseFolder := filepath.Base(o.input)
 
@@ -60,8 +64,8 @@ func process(o options) error {
 					relativePath := strings.TrimPrefix(path, o.input)
 					relativePath = strings.TrimLeft(relativePath, "/")
 
-					if isConvertible(relativePath) {
-						return convert(relativePath, o.input, outFolder)
+					if convert.IsConvertible(relativePath) {
+						return converter.Convert(relativePath, o.input, outFolder)
 					}
 
 					inFile, err := os.Open(path)
@@ -99,19 +103,4 @@ func process(o options) error {
 	wg.Wait()
 
 	return err
-}
-
-func isConvertible(path string) bool {
-	return filepath.Ext(path) == ".flac"
-}
-
-func convert(relativePath, baseFolder, outFolder string) error {
-	mp3FileName := strings.TrimSuffix(relativePath, ".flac") + ".mp3"
-	newPath := filepath.Join(outFolder, mp3FileName)
-	originalPath := filepath.Join(baseFolder, relativePath)
-	log.Printf("Creating: %q", mp3FileName)
-	cmd := exec.Command("ffmpeg", "-i", originalPath, "-q:a", "0", "-threads", "0", "-loglevel", "error", newPath)
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-	return cmd.Run()
 }
