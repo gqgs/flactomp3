@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -11,6 +12,18 @@ import (
 
 	"github.com/gqgs/flactomp3/pkg/convert"
 )
+
+func updateFilename(path, format string) string {
+	if !strings.Contains(strings.ToLower(path), "flac") {
+		return fmt.Sprintf("%s [%s]", path, format)
+	}
+
+	return strings.NewReplacer(
+		"Flac", format,
+		"flac", format,
+		"FLAC", format,
+	).Replace(path)
+}
 
 func process(o options) error {
 	if o.input == "" {
@@ -24,7 +37,7 @@ func process(o options) error {
 
 	baseFolder := filepath.Base(o.input)
 
-	outFolder := filepath.Join(o.output, baseFolder+" [V0]")
+	outFolder := filepath.Join(o.output, updateFilename(baseFolder, "V0"))
 	if err := os.Mkdir(outFolder, os.ModePerm); err != nil {
 		return err
 	}
