@@ -17,8 +17,10 @@ func process(o options) error {
 		return errors.New("input must be defined")
 	}
 
-	var converter convert.Converter
-	converter = convert.NewFFmpegConverter()
+	converter, err := convert.NewConverter(o.converter)
+	if err != nil {
+		return err
+	}
 
 	baseFolder := filepath.Base(o.input)
 
@@ -27,7 +29,7 @@ func process(o options) error {
 		return err
 	}
 
-	err := filepath.Walk(o.input, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(o.input, func(path string, info os.FileInfo, err error) error {
 		relativePath := strings.TrimPrefix(path, o.input)
 		relativePath = strings.TrimLeft(relativePath, "/")
 		if relativePath == "" {
