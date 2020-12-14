@@ -51,6 +51,12 @@ func Test_updateFilename(t *testing.T) {
 			format: "V0",
 			want:   "Milo - Who Told You To Think!!!!! (2017) [WEB V0]",
 		},
+		{
+			name:   "format in between spaces",
+			path:   "Skrillex - Bangarang EP (2011) - [WEB - FLAC - Lossless]",
+			format: "V0",
+			want:   "Skrillex - Bangarang EP (2011) - [WEB - V0 - Lossless]",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -58,5 +64,14 @@ func Test_updateFilename(t *testing.T) {
 				t.Errorf("updateFilename() = %q, want %q", got, tt.want)
 			}
 		})
+	}
+}
+
+func Benchmark_updateFilename(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		updateFilename("Art Blakey & The Jazz Messengers - Moanin' (1958) [FLAC] {BLP 4003}", "V0")
+		updateFilename("Alice Coltrane - Ptah, The El Daoud (1970) (Japanese Edition 2004)", "V0")
+		updateFilename("Charles Mingus - Blues & Roots (1960) [Vinyl - FLAC] {Atlantic ATL 50 232}", "V0")
+		updateFilename("Bill Evans - Portrait in Jazz (1960) (OJCCD-088-2) [CD]", "V0")
 	}
 }

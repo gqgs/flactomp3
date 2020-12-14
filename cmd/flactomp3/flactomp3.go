@@ -18,11 +18,23 @@ func updateFilename(path, format string) string {
 		return fmt.Sprintf("%s [%s]", path, format)
 	}
 
-	return strings.NewReplacer(
-		"Flac", format,
-		"flac", format,
-		"FLAC", format,
-	).Replace(path)
+	var builder strings.Builder
+	var i int
+	for i = 0; i <= len(path)-4; i++ {
+		substr := path[i : i+4]
+		if strings.EqualFold(substr, "flac") {
+			builder.WriteString(format)
+			i += 3
+			continue
+		}
+		builder.WriteByte(path[i])
+	}
+
+	if i <= len(path) {
+		builder.WriteString(path[i:])
+	}
+
+	return builder.String()
 }
 
 func process(o options) error {
