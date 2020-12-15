@@ -20,6 +20,7 @@ func updateFilename(path, format string) string {
 
 	var builder strings.Builder
 	var i int
+	builder.Grow(len(path))
 	for i = 0; i <= len(path)-4; i++ {
 		substr := path[i : i+4]
 		if strings.EqualFold(substr, "flac") {
