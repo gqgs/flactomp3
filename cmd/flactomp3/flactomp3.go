@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
@@ -118,7 +119,7 @@ func process(o options) error {
 		}
 	}()
 
-	err = filepath.Walk(o.input, func(path string, info os.FileInfo, err error) error {
+	err = filepath.WalkDir(o.input, func(path string, info fs.DirEntry, err error) error {
 		if info.IsDir() {
 			return nil
 		}
