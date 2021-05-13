@@ -3,6 +3,7 @@ package convert
 import (
 	"fmt"
 	"path/filepath"
+	"strings"
 )
 
 type Converter interface {
@@ -20,5 +21,5 @@ func NewConverter(name string) (Converter, error) {
 }
 
 func IsConvertible(path string) bool {
-	return filepath.Ext(path) == ".flac"
+	return strings.EqualFold(filepath.Ext(path), ".flac")
 }
