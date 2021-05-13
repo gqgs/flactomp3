@@ -56,7 +56,7 @@ func process(o options) error {
 		return err
 	}
 
-	err = filepath.Walk(o.input, func(path string, info os.FileInfo, err error) error {
+	err = filepath.WalkDir(o.input, func(path string, info fs.DirEntry, err error) error {
 		relativePath := strings.TrimPrefix(path, o.input)
 		relativePath = strings.TrimLeft(relativePath, "/")
 		if relativePath == "" {
