@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"os"
 	"path/filepath"
@@ -10,11 +9,13 @@ import (
 	"github.com/gqgs/flactomp3/pkg/notify"
 )
 
+//go:generate go run github.com/gqgs/argsgen
+
 type options struct {
-	output    string
-	input     string
-	converter string
-	parallel  int
+	input     string `arg:"input folder,positional"`
+	output    string `arg:"output folder,positional"`
+	converter string `arg:"output encoding format (opus | lame)"`
+	parallel  int    `arg:"number of parallel processes"`
 }
 
 func main() {
@@ -22,12 +23,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var o options
-	flag.StringVar(&o.input, "input", "", "input folder")
-	flag.StringVar(&o.output, "output", wd, "output folder")
-	flag.IntVar(&o.parallel, "parallel", runtime.NumCPU(), "number of parallel processes")
-	flag.StringVar(&o.converter, "converter", "lame", "output encoding format (opus | lame)")
-	flag.Parse()
+	o := options{
+		output:    wd,
+		parallel:  runtime.NumCPU(),
+		converter: "lame",
+	}
+	o.MustParse()
 
 	var notifier notify.Notifier
 	notifier = notify.NewNotifier("flactomp3", filepath.Base(o.input))
