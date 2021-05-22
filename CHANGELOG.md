@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/gqgs/flactomp3/compare/v1.0.0...v1.1.0) (2021-05-22)
+
+
+### Features
+
+* accept positional arguments ([8ff9cfa](https://github.com/gqgs/flactomp3/commit/8ff9cfa7bf1125d1731ae2cb94c4669597763dcd))
+
+
+### Bug Fixes
+
+* case-insensitive ext match ([190cb28](https://github.com/gqgs/flactomp3/commit/190cb285e7e9bf08549dc5e8d2826235e62b5653))
+
 ## 1.0.0 (2020-12-17)
 
 
