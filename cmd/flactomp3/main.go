@@ -30,8 +30,7 @@ func main() {
 	}
 	o.MustParse()
 
-	var notifier notify.Notifier
-	notifier = notify.NewNotifier("flactomp3", filepath.Base(o.input))
+	notifier := notify.NewNotifier("flactomp3", filepath.Base(o.input))
 	notifier.Start()
 	if err := process(o); err != nil {
 		notifier.Error(err)

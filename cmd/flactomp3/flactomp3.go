@@ -25,8 +25,8 @@ func updateFilename(path, format string) string {
 	for i = 0; i <= len(path)-4; i++ {
 		substr := path[i : i+4]
 		if strings.EqualFold(substr, "flac") {
-			builder.WriteString(format)
-			i += 3
+			n, _ := builder.WriteString(format)
+			i += n + 1
 			continue
 		}
 		builder.WriteByte(path[i])
@@ -56,6 +56,8 @@ func process(o options) error {
 		return err
 	}
 
+	var hasConvertibleFiles bool
+
 	err = filepath.WalkDir(o.input, func(path string, info fs.DirEntry, err error) error {
 		relativePath := strings.TrimPrefix(path, o.input)
 		relativePath = strings.TrimLeft(relativePath, "/")
@@ -68,11 +70,21 @@ func process(o options) error {
 			return os.Mkdir(newFolder, os.ModePerm)
 		}
 
+		hasConvertibleFiles = hasConvertibleFiles || convert.IsConvertible(info.Name())
+
 		return nil
 	})
 
 	if err != nil {
 		return err
+	}
+
+	if !hasConvertibleFiles {
+		originalName := filepath.Join(o.output, baseFolder)
+		if err := os.Rename(outFolder, originalName); err != nil {
+			return err
+		}
+		outFolder = originalName
 	}
 
 	var wg sync.WaitGroup
