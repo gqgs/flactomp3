@@ -19,7 +19,7 @@ func (c *lame) Convert(relativePath, baseFolder, outFolder string) error {
 	newPath := filepath.Join(outFolder, newFilename)
 	originalPath := filepath.Join(baseFolder, relativePath)
 	log.Printf("encoding: %q", newFilename)
-	cmd := exec.Command("ffmpeg", "-i", originalPath, "-c:a", "libmp3lame", "-q:a", "0", "-threads", "0", "-loglevel", "error", newPath)
+	cmd := exec.Command("ffmpeg", "-i", originalPath, "-c:v", "copy", "-c:a", "libmp3lame", "-q:a", "0", "-threads", "0", "-loglevel", "error", newPath)
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 	return cmd.Run()
