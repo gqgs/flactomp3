@@ -9,7 +9,7 @@ import (
 	"github.com/gqgs/flactomp3/pkg/notify"
 )
 
-//go:generate go run github.com/gqgs/argsgen
+//go:generate go tool argsgen
 
 type options struct {
 	input     string `arg:"input folder,positional"`
